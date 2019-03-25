@@ -50,38 +50,3 @@ router.post('/create', (req, res, next) => {
 });
 
 module.exports = router;
-
-let dayObj = {
-  rule_type: "ONE_DAY",
-  day: 'DD-MM-YYY',
-  intervals: [{
-    start: "HH:MM",
-    end: "HH:MM"
-  },{
-    start: "HH:MM",
-    end: "HH:MM"
-  }]
-}
-
-let dailyObj = {
-  rule_type: "DAILY",
-  intervals: [{
-    start: "HH:MM",
-    end: "HH:MM"
-  },{
-    start: "HH:MM",
-    end: "HH:MM"
-  }]
-}
-
-let weeklyObj = {
-  rule_type: "WEEKLY",
-  week_days: [0, 2, 3],
-  intervals: [{
-    start: "HH:MM",
-    end: "HH:MM"
-  },{
-    start: "HH:MM",
-    end: "HH:MM"
-  }]
-}
