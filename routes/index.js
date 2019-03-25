@@ -23,7 +23,7 @@ router.post('/create', (req, res, next) => {
 
       for (let d of req.body.week_days)
         if (isNaN(parseInt(d)) || parseInt(d) < 0 || parseInt(d) > 7)
-          return next(errors.InvalidDaysWeekElementType);
+          return next(errors.InvalidWeekDaysElementType);
 
       break;
 
