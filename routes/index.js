@@ -1,52 +1,9 @@
 const router = require('express').Router();
-const moment = require('moment');
-const uuid = require('uuid/v1');
-const path = require('path');
-const fs = require('fs');
 
-const errors = require('./errors');
+const rules = require('./rules');
+const hours = require('./hours');
 
-router.post('/create', (req, res, next) => {
-  // rule type validation
-  switch (req.body.rule_type) {
-    case 'ONE_DAY':
-      if (!moment(req.body.day, 'DD-MM-YYYY', true).isValid())
-        return next(errors.InvalidDay);
-      break;
-
-    case 'DAILY':
-      break;
-
-    case 'WEEKLY':
-      if (!Array.isArray(req.body.week_days) || req.body.week_days.length < 1)
-        return next(errors.InvalidWeekDaysType);
-
-      for (let d of req.body.week_days)
-        if (isNaN(parseInt(d)) || parseInt(d) < 0 || parseInt(d) > 7)
-          return next(errors.InvalidWeekDaysElementType);
-
-      break;
-
-    default:
-      return next(errors.InvalidRuleType);
-      break;
-  }
-
-  // intervals validation
-  if (!Array.isArray(req.body.intervals) || req.body.intervals.length < 1)
-    return next(errors.InvalidIntervalsType);
-
-  for (let d of req.body.intervals) {
-    if (!moment(d.start, 'HH:mm', true).isValid() || !moment(d.end, 'HH:mm', true).isValid())
-      return next(errors.InvalidTime);
-  }
-
-  // save rule
-  const data = Object.assign({ id: uuid(), rule_type: null, day: null, week_days: null, intervals: null }, req.body);
-
-  fs.writeFileSync(path.join(__dirname, '..', 'db', 'rules', data.id + '.json'), JSON.stringify(data));
-
-  res.json({data: data});
-});
+router.use('/rules', rules);
+router.use('/hours', hours);
 
 module.exports = router;
