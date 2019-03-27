@@ -5,7 +5,7 @@ const path = require('path');
 
 const errors = require('./errors');
 
-router.use('/', (req, res, next) => {
+router.get('/', (req, res, next) => {
   try {
     const start = moment(req.query.start, 'DD-MM-YYYY', true);
     const end = moment(req.query.end, 'DD-MM-YYYY', true);
