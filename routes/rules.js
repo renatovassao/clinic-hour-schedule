@@ -6,11 +6,9 @@ const fs = require('fs');
 
 const errors = require('./errors');
 
-const db_path = path.join(__dirname, '..', 'db', 'rules');
-
 router.get('/', (req, res, next) => {
   try {
-    const files = fs.readdirSync(db_path);
+    const files = fs.readdirSync(req.app.get('db_path'));
 
     const data = [];
 
@@ -18,7 +16,7 @@ router.get('/', (req, res, next) => {
       if (f === '.gitignore')
         continue;
 
-      let rule = fs.readFileSync(path.join(db_path, f), 'utf-8');
+      let rule = fs.readFileSync(path.join(req.app.get('db_path'), f), 'utf-8');
       data.push(JSON.parse(rule));
     }
 
@@ -72,7 +70,7 @@ router.post('/', (req, res, next) => {
     intervals: req.body.intervals
   };
 
-  fs.writeFile(path.join(db_path, data.id + '.json'), JSON.stringify(data), (err) => {
+  fs.writeFile(path.join(req.app.get('db_path'), data.id + '.json'), JSON.stringify(data), (err) => {
     if (err)
       return next(err);
 
@@ -81,7 +79,7 @@ router.post('/', (req, res, next) => {
 });
 
 router.get('/:id', (req, res, next) => {
-  fs.readFile(path.join(db_path, req.params.id + '.json'), 'utf-8', (err, data) => {
+  fs.readFile(path.join(req.app.get('db_path'), req.params.id + '.json'), 'utf-8', (err, data) => {
     if (err)
       return next(err);
 
@@ -90,12 +88,16 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.delete('/:id', (req, res, next) => {
-  fs.unlink(path.join(db_path, req.params.id + '.json'), (err) => {
-    if (err)
-      return next(err);
+  const file = path.join(req.app.get('db_path'), req.params.id + '.json');
+  if (fs.existsSync(file)) {
+    fs.unlink(file, (err) => {
+      if (err)
+        return next(err);
 
-    res.json(`Rule ${req.params.id} was deleted successfully.`);
-  });
+      res.json(`Rule ${req.params.id} was deleted successfully.`);
+    });
+  } else
+    return next(errors.RuleNotFound);
 });
 
 module.exports = router;
