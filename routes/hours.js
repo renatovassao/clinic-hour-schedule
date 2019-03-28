@@ -5,6 +5,86 @@ const path = require('path');
 
 const errors = require('./errors');
 
+/**
+ * @api {get} /hours List available hours
+ * @apiGroup Hours
+ * @apiParam {String} start Start day (query)
+ * @apiParam {String} end End day (query)
+ *
+ * @apiSuccessExample {json} Success Response
+ *  HTTP/1.1 200 OK
+ *  [
+ *    {
+ *      "day": "26-03-2019",
+ *      "intervals": [
+ *        {
+ *          "start": "07:00",
+ *          "end": "08:00"
+ *        }
+ *      ]
+ *    },
+ *    {
+ *      "day": "27-03-2019",
+ *      "intervals": [
+ *        {
+ *          "start": "07:00",
+ *          "end": "08:00"
+ *        },
+ *        {
+ *          "start": "09:00",
+ *         "end": "10:00"
+ *        },
+ *        {
+ *          "start": "11:00",
+ *          "end": "12:00"
+ *        }
+ *      ]
+ *    },
+ *    {
+ *      "day": "28-03-2019",
+ *      "intervals": [
+ *        {
+ *          "start": "01:00",
+ *          "end": "02:00"
+ *        },
+ *        {
+ *          "start": "03:00",
+ *          "end": "04:00"
+ *        },
+ *        {
+ *          "start": "07:00",
+ *          "end": "08:00"
+ *        }
+ *      ]
+ *    },
+ *    {
+ *      "day": "29-03-2019",
+ *      "intervals": [
+ *        {
+ *          "start": "07:00",
+ *          "end": "08:00"
+ *        },
+ *        {
+ *          "start": "09:00",
+ *          "end": "10:00"
+ *        },
+ *        {
+ *          "start": "11:00",
+ *          "end": "12:00"
+ *        }
+ *      ]
+ *    }
+ *  ]
+ *
+ * @apiErrorExample {json} Error Response
+ *    HTTP/1.1 400 Bad Request
+ *    {
+ *      "error": "Invalid interval. Valid interval start and end format is: 'DD-MM-YYYY'"
+ *    }
+ * @apiErrorExample {json} Error Response
+ *    HTTP/1.1 500 Internal Server Error
+ *
+ */
 router.get('/', (req, res, next) => {
   try {
     const start = moment(req.query.start, 'DD-MM-YYYY', true);
