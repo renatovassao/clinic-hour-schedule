@@ -266,7 +266,7 @@ router.get('/:id', (req, res, next) => {
         return next(err);
 
       res.json(JSON.parse(data));
-      });
+    });
   } else
     return next(errors.RuleNotFound);
 });
