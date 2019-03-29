@@ -31,6 +31,8 @@ and this will show all the rules
 curl localhost:3000/rules
 ```
 
+Or you can use import this postman collection the see all the examples: https://www.getpostman.com/collections/4c39d650563bf933ccfe
+
 ## Documentation
 
 [apiDoc](http://apidocjs.com/) was used to document this API, and you can see it in localhost:3000/doc
